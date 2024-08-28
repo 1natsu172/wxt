@@ -229,6 +229,9 @@ function reloadContentScripts(steps: BuildStepOutput[], server: WxtDevServer) {
       const entry = step.entrypoints;
       if (Array.isArray(entry) || entry.type !== 'content-script') return;
 
+      // when 1st called path no problem, but when 2nd called path broken
+      console.log('outDir', wxt.config.outDir);
+
       const js = getContentScriptJs(wxt.config, entry);
       const cssMap = getContentScriptsCssMap(server.currentOutput, [entry]);
       const css = getContentScriptCssFiles([entry], cssMap);
