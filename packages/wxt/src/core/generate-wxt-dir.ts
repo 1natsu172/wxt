@@ -8,6 +8,7 @@ import path from 'node:path';
 import { Message, parseI18nMessages } from './utils/i18n';
 import { writeFileIfDifferent, getPublicFiles } from './utils/fs';
 import { wxt } from './wxt';
+import { getWebAccessibleResourcesPaths } from './utils/manifest';
 
 /**
  * Generate and write all the files inside the `InternalConfig.typesDir` directory.
@@ -78,11 +79,14 @@ async function getPathsDeclarationEntry(
         isHtmlEntrypoint(entry) ? '.html' : '.js',
       ),
     )
-    .concat(await getPublicFiles());
+    .concat(await getPublicFiles())
+    .concat(
+      getWebAccessibleResourcesPaths().map((path) => path.replace(/^\//, '')),
+    );
 
   await wxt.hooks.callHook('prepare:publicPaths', wxt, paths);
 
-  const unions = paths
+  const unions = [...new Set(paths)]
     .map(normalizePath)
     .sort()
     .map((path) => `    | "/${path}"`)

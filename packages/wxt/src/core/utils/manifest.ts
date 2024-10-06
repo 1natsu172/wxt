@@ -630,6 +630,14 @@ export function convertWebAccessibleResourcesToMv2(
   );
 }
 
+export function getWebAccessibleResourcesPaths() {
+  return (
+    wxt.config.manifest.web_accessible_resources
+      ?.flatMap((item) => (typeof item === 'string' ? item : item.resources))
+      .map(normalizePath) ?? []
+  );
+}
+
 function moveHostPermissionsToPermissions(
   manifest: Manifest.WebExtensionManifest,
 ): void {
