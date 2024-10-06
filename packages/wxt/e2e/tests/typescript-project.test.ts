@@ -36,6 +36,20 @@ describe('TypeScript Project', () => {
     project.addFile('entrypoints/popup.html', '<html></html>');
     project.addFile('entrypoints/options.html', '<html></html>');
     project.addFile('entrypoints/sandbox.html', '<html></html>');
+    project.setConfigFileConfig({
+      manifest: {
+        web_accessible_resources: [
+          {
+            resources: ['/content-scripts/logo.svg'],
+            matches: ['<all_urls>'],
+          },
+          {
+            resources: ['/content-scripts/injected.css'],
+            matches: ['*://*.google.com/*'],
+          },
+        ],
+      },
+    });
 
     await project.prepare();
 
@@ -48,6 +62,8 @@ describe('TypeScript Project', () => {
 
       declare module "wxt/browser" {
         export type PublicPath =
+          | "/content-scripts/injected.css"
+          | "/content-scripts/logo.svg"
           | "/options.html"
           | "/popup.html"
           | "/sandbox.html"
